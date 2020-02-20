@@ -1008,9 +1008,11 @@ DecodeRet convert_decoded(const xed_decoded_inst_t &xedd,
 
         opcodeInfo = convert_simple(xedd, &opcode, &operands);
         if (!opcodeInfo) {
+            arch_decode_dump(xedd._byte_array._dec, xedd._byte_array._dec + ilen);
             if (cfg.getDrobCfg().fail_on_unmodelled) {
-                arch_decode_dump(xedd._byte_array._dec, xedd._byte_array._dec + ilen);
                 drob_throw("Unmodelled instruction detected");
+            } else if (loglevel >= DROB_LOGLEVEL_WARNING) {
+                drob_warn("Unmodelled instruction detected");
             }
             if (reencode) {
                 drob_throw("RIP-relative addressing is not supported"
