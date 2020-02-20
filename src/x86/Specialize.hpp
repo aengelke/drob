@@ -37,6 +37,7 @@ specialize_f specialize_mov32;
 specialize_f specialize_mov64;
 
 specialize_f specialize_movapd;
+specialize_f specialize_movaps;
 specialize_f specialize_movsd;
 specialize_f specialize_movupd;
 specialize_f specialize_movups;

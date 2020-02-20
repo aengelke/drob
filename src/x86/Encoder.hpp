@@ -30,6 +30,7 @@ encode_f encode_jmp;
 encode_f encode_lea;
 encode_f encode_mov;
 encode_f encode_movapd;
+encode_f encode_movaps;
 encode_f encode_movsd;
 encode_f encode_movupd;
 encode_f encode_movups;
