@@ -271,6 +271,7 @@ typedef unsigned int EncFlags;
 #define ENC_FLAG_REXW 1
 #define ENC_FLAG_66 2
 #define ENC_FLAG_F2 4
+#define ENC_FLAG_F3 8
 
 typedef class ModRMEncoding {
 public:
@@ -308,6 +309,8 @@ private:
     bool p66{false};
     /* REPNE prefix (0xf2) */
     bool pf2{false};
+    /* REPNE prefix (0xf3) */
+    bool pf3{false};
 
     REX rex;
     ModRM modrm;
@@ -318,7 +321,7 @@ private:
 ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, Register reg,
                  Register rm, EncFlags flags) :
     oc(oc), ocLen(ocLen), p66(!!(flags & ENC_FLAG_66)),
-    pf2(!!(flags & ENC_FLAG_F2))
+    pf2(!!(flags & ENC_FLAG_F2)), pf3(!!(flags & ENC_FLAG_F3))
 {
     const uint8_t r = encodeReg(reg);
     const uint8_t b = encodeReg(rm);
@@ -336,7 +339,7 @@ ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, Register reg,
 ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, uint8_t reg,
                  Register rm, EncFlags flags) :
     oc(oc), ocLen(ocLen), p66(!!(flags & ENC_FLAG_66)),
-    pf2(!!(flags & ENC_FLAG_F2))
+    pf2(!!(flags & ENC_FLAG_F2)), pf3(!!(flags & ENC_FLAG_F3))
 {
     const uint8_t b = encodeReg(rm);
 
@@ -353,7 +356,7 @@ ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, uint8_t reg,
 ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, uint8_t reg,
                  Register rm, uint64_t imm, uint8_t immLen, EncFlags flags) :
     oc(oc), ocLen(ocLen), imm(imm), immLen(immLen), p66(!!(flags & ENC_FLAG_66)),
-    pf2(!!(flags & ENC_FLAG_F2))
+    pf2(!!(flags & ENC_FLAG_F2)), pf3(!!(flags & ENC_FLAG_F3))
 {
     const uint8_t b = encodeReg(rm);
 
@@ -370,7 +373,7 @@ ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, uint8_t reg,
 ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, Register reg,
                  StaticMemPtr rm, EncFlags flags, uint64_t addr) :
     oc(oc), ocLen(ocLen), p66(!!(flags & ENC_FLAG_66)),
-    pf2(!!(flags & ENC_FLAG_F2))
+    pf2(!!(flags & ENC_FLAG_F2)), pf3(!!(flags & ENC_FLAG_F3))
 {
     uint8_t r = encodeReg(reg);
 
@@ -390,7 +393,7 @@ ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, Register reg,
 ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, uint8_t reg,
                  StaticMemPtr rm, EncFlags flags, uint64_t addr) :
     oc(oc), ocLen(ocLen), p66(!!(flags & ENC_FLAG_66)),
-    pf2(!!(flags & ENC_FLAG_F2))
+    pf2(!!(flags & ENC_FLAG_F2)), pf3(!!(flags & ENC_FLAG_F3))
 {
     rex.w = !!(flags & ENC_FLAG_REXW);
     /* encode the reg register */
@@ -409,7 +412,7 @@ ModRMEncoding::ModRMEncoding(const uint8_t *oc, uint8_t ocLen, uint8_t reg,
                  StaticMemPtr rm, uint64_t imm, uint8_t immLen,
                  EncFlags flags, uint64_t addr) :
     oc(oc), ocLen(ocLen), imm(imm), immLen(immLen), p66(!!(flags & ENC_FLAG_66)),
-    pf2(!!(flags & ENC_FLAG_F2))
+    pf2(!!(flags & ENC_FLAG_F2)), pf3(!!(flags & ENC_FLAG_F3))
 {
     rex.w = !!(flags & ENC_FLAG_REXW);
     /* encode the reg register */
@@ -436,6 +439,9 @@ int ModRMEncoding::write(uint8_t *data)
     }
     if (pf2) {
         data[idx++] = 0xf2;
+    }
+    if (pf3) {
+        data[idx++] = 0xf3;
     }
     if (rex.isRequired()) {
         data[idx++] = rex.val;
@@ -501,6 +507,9 @@ void ModRMEncoding::encodeMemoryDirect(StaticMemPtr rm, uint64_t addr)
         ilen += 1;
     }
     if (pf2) {
+        ilen += 1;
+    }
+    if (pf3) {
         ilen += 1;
     }
     if (rex.isRequired()) {
@@ -808,6 +817,9 @@ static inline int write_reg(uint8_t oc, const ExplicitStaticOperands &explOperan
     if (flags & ENC_FLAG_F2) {
         buf[idx++] = 0xF2;
     }
+    if (flags & ENC_FLAG_F3) {
+        buf[idx++] = 0xF3;
+    }
     if (rex.isRequired()) {
         buf[idx++] = rex.val;
     }
@@ -848,6 +860,9 @@ static inline int write_imm8(uint8_t oc, uint8_t imm, EncFlags flags,
     if (flags & ENC_FLAG_F2) {
         buf[idx++] = 0xF2;
     }
+    if (flags & ENC_FLAG_F3) {
+        buf[idx++] = 0xF3;
+    }
     if (rex.isRequired()) {
         buf[idx++] = rex.val;
     }
@@ -871,6 +886,9 @@ static inline int write_imm16(uint8_t oc, uint16_t imm, EncFlags flags,
     if (flags & ENC_FLAG_F2) {
         buf[idx++] = 0xF2;
     }
+    if (flags & ENC_FLAG_F3) {
+        buf[idx++] = 0xF3;
+    }
     if (rex.isRequired()) {
         buf[idx++] = rex.val;
     }
@@ -893,6 +911,9 @@ static inline int write_imm32(uint8_t oc, int32_t imm, EncFlags flags,
     }
     if (flags & ENC_FLAG_F2) {
         buf[idx++] = 0xF2;
+    }
+    if (flags & ENC_FLAG_F3) {
+        buf[idx++] = 0xF3;
     }
     if (rex.isRequired()) {
         buf[idx++] = rex.val;
