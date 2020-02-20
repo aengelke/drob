@@ -1348,6 +1348,32 @@ DEF_ENCODE_FN(mulsd)
     }
 }
 
+DEF_ENCODE_FN(mulps)
+{
+    switch (opcode) {
+    case Opcode::MULPSrr:
+        return write_modrm_reg_r(0x0f, 0x59, explOperands, ENC_FLAG_NONE, buf);
+    case Opcode::MULPSrm:
+        return write_modrm_reg_m(0x0f, 0x59, explOperands, ENC_FLAG_NONE, buf,
+                                 addr);
+    default:
+        drob_assert_not_reached();
+    }
+}
+
+DEF_ENCODE_FN(mulss)
+{
+    switch (opcode) {
+    case Opcode::MULSSrr:
+        return write_modrm_reg_r(0x0f, 0x59, explOperands, ENC_FLAG_F3, buf);
+    case Opcode::MULSSrm:
+        return write_modrm_reg_m(0x0f, 0x59, explOperands, ENC_FLAG_F3, buf,
+                                 addr);
+    default:
+        drob_assert_not_reached();
+    }
+}
+
 DEF_ENCODE_FN(pop)
 {
     switch (opcode) {

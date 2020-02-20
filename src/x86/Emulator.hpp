@@ -35,6 +35,8 @@ emulate_f emulate_lea;
 emulate_f emulate_mov;
 emulate_f emulate_mulpd;
 emulate_f emulate_mulsd;
+emulate_f emulate_mulps;
+emulate_f emulate_mulss;
 emulate_f emulate_pop;
 emulate_f emulate_push;
 emulate_f emulate_pxor;

@@ -632,6 +632,59 @@ DEF_SPECIALIZE_FN(mulsd)
     return SpecRet::NoChange;
 }
 
+DEF_SPECIALIZE_FN(mulps)
+{
+    __uint128_t imm;
+
+    if (dynInfo.operands[0].output.isImm()) {
+        imm = dynInfo.operands[0].output.getImm128();
+        if (!imm) {
+            opcode = Opcode::PXOR128rr;
+            explOperands.op[1].reg = explOperands.op[0].reg;
+            return SpecRet::Change;
+        }
+        opcode = Opcode::MOVAPSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+
+    if (dynInfo.operands[1].input.isImm()) {
+        imm = dynInfo.operands[1].input.getImm128();
+        opcode = Opcode::MULPSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+    return SpecRet::NoChange;
+}
+
+DEF_SPECIALIZE_FN(mulss)
+{
+    uint32_t imm;
+
+    if (dynInfo.operands[0].output.isImm()) {
+        imm = dynInfo.operands[0].output.getImm64();
+        opcode = Opcode::MOVSSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+
+    if (dynInfo.operands[1].input.isImm()) {
+        imm = dynInfo.operands[1].input.getImm64();
+        opcode = Opcode::MULSSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+    return SpecRet::NoChange;
+}
+
 DEF_SPECIALIZE_FN(pop)
 {
     /* if nobody reads the register, only calculate the RSP */

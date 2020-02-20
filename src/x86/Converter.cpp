@@ -659,6 +659,20 @@ static const OpcodeInfo *convert_mulsd(const xed_decoded_inst_t &xedd,
                  Opcode::MULSDrr);
 }
 
+static const OpcodeInfo *convert_mulps(const xed_decoded_inst_t &xedd,
+                       Opcode *opcode, ExplicitStaticOperands *operands)
+{
+    return convert_rm_rr(xedd, opcode, operands, Opcode::MULPSrm,
+                 Opcode::MULPSrr);
+}
+
+static const OpcodeInfo *convert_mulss(const xed_decoded_inst_t &xedd,
+                       Opcode *opcode, ExplicitStaticOperands *operands)
+{
+    return convert_rm_rr(xedd, opcode, operands, Opcode::MULSSrm,
+                 Opcode::MULSSrr);
+}
+
 static const OpcodeInfo *convert_pop(const xed_decoded_inst_t &xedd,
                      Opcode *opcode, ExplicitStaticOperands *operands)
 {
@@ -877,6 +891,10 @@ static const OpcodeInfo *convert_simple(const xed_decoded_inst_t &xedd,
         return convert_mulpd(xedd, opcode, operands);
     case XED_ICLASS_MULSD:
         return convert_mulsd(xedd, opcode, operands);
+    case XED_ICLASS_MULPS:
+        return convert_mulps(xedd, opcode, operands);
+    case XED_ICLASS_MULSS:
+        return convert_mulss(xedd, opcode, operands);
     case XED_ICLASS_POP:
         return convert_pop(xedd, opcode, operands);
     case XED_ICLASS_PUSH:

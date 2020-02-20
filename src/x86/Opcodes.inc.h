@@ -167,6 +167,14 @@ DEF_OPC(MULPDrr, x128RW_x128R, none, none, Other, nullptr, mulpd, mulpd, mulpd, 
 DEF_OPC(MULSDrm, x64RW_m64R, none, none, Other, nullptr, mulsd, mulsd, mulsd, OfEmuImm)
 DEF_OPC(MULSDrr, x64RW_x64R, none, none, Other, nullptr, mulsd, mulsd, mulsd, OfEmuImm)
 
+/* MULPS */
+DEF_OPC(MULPSrm, x128RW_m128R, none, none, Other, nullptr, mulps, mulps, mulps, OfEmuImm)
+DEF_OPC(MULPSrr, x128RW_x128R, none, none, Other, nullptr, mulps, mulps, mulps, OfEmuImm)
+
+/* MULSS */
+DEF_OPC(MULSSrm, x32RW_m32R, none, none, Other, nullptr, mulss, mulss, mulss, OfEmuImm)
+DEF_OPC(MULSSrr, x32RW_x32R, none, none, Other, nullptr, mulss, mulss, mulss, OfEmuImm)
+
 /* POP */
 DEF_OPC(POP16m, m16W, pop16, none, Other, nullptr, pop, pop, nullptr, OfEmuFull)
 DEF_OPC(POP16r, r16W, pop16, none, Other, nullptr, pop, pop, pop, OfEmuFull)

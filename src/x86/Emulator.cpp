@@ -343,6 +343,42 @@ DEF_EMULATE_FN(mulsd)
     return EmuRet::Ok;
 }
 
+static inline __uint128_t mulps(__uint128_t a,  __uint128_t b)
+{
+    asm volatile ("     mulps %[in], %[inout]\n"
+                  : [inout] "+x" (a)
+                  : [in] "x" (b)
+                  : "memory" );
+    return a;
+}
+
+DEF_EMULATE_FN(mulps)
+{
+    DynamicOperandInfo &inout = dynInfo.operands[0];
+    DynamicOperandInfo &in = dynInfo.operands[1];
+
+    inout.output = mulps(inout.input.getImm128(), in.input.getImm128());
+    return EmuRet::Ok;
+}
+
+static inline uint32_t mulss(uint32_t a, uint32_t b)
+{
+    asm volatile ("     mulss %[in], %[inout]\n"
+                  : [inout] "+x" (a)
+                  : [in] "x" (b)
+                  : "memory" );
+    return a;
+}
+
+DEF_EMULATE_FN(mulss)
+{
+    DynamicOperandInfo &inout = dynInfo.operands[0];
+    DynamicOperandInfo &in = dynInfo.operands[1];
+
+    inout.output = mulss(inout.input.getImm64(), in.input.getImm64());
+    return EmuRet::Ok;
+}
+
 DEF_EMULATE_FN(pop)
 {
     const uint64_t size = static_cast<uint8_t>(dynInfo.operands[2].memAcc.size);

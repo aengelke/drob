@@ -37,6 +37,8 @@ encode_f encode_movupd;
 encode_f encode_movups;
 encode_f encode_mulpd;
 encode_f encode_mulsd;
+encode_f encode_mulps;
+encode_f encode_mulss;
 encode_f encode_pop;
 encode_f encode_push;
 encode_f encode_pxor;

@@ -45,6 +45,8 @@ specialize_f specialize_movups;
 
 specialize_f specialize_mulpd;
 specialize_f specialize_mulsd;
+specialize_f specialize_mulps;
+specialize_f specialize_mulss;
 
 specialize_f specialize_pop;
 
