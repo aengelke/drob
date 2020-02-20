@@ -178,6 +178,42 @@ DEF_EMULATE_FN(addsd)
     return EmuRet::Ok;
 }
 
+static inline __uint128_t addps(__uint128_t a,  __uint128_t b)
+{
+    asm volatile ("     addps %[in], %[inout]\n"
+                  : [inout] "+x" (a)
+                  : [in] "x" (b)
+                  : "memory" );
+    return a;
+}
+
+DEF_EMULATE_FN(addps)
+{
+    DynamicOperandInfo &inout = dynInfo.operands[0];
+    DynamicOperandInfo &in = dynInfo.operands[1];
+
+    inout.output = addps(inout.input.getImm128(), in.input.getImm128());
+    return EmuRet::Ok;
+}
+
+static inline uint32_t addss(uint32_t a, uint32_t b)
+{
+    asm volatile ("     addss %[in], %[inout]\n"
+                  : [inout] "+x" (a)
+                  : [in] "x" (b)
+                  : "memory" );
+    return a;
+}
+
+DEF_EMULATE_FN(addss)
+{
+    DynamicOperandInfo &inout = dynInfo.operands[0];
+    DynamicOperandInfo &in = dynInfo.operands[1];
+
+    inout.output = addss(inout.input.getImm64(), in.input.getImm64());
+    return EmuRet::Ok;
+}
+
 DEF_EMULATE_FN(call)
 {
     DynamicOperandInfo &rsp = dynInfo.operands[1];

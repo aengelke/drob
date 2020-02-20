@@ -26,6 +26,8 @@ emulate_f emulate_add32;
 emulate_f emulate_add64;
 emulate_f emulate_addpd;
 emulate_f emulate_addsd;
+emulate_f emulate_addps;
+emulate_f emulate_addss;
 emulate_f emulate_cmp8;
 emulate_f emulate_cmp16;
 emulate_f emulate_cmp32;

@@ -23,6 +23,8 @@ namespace drob {
 encode_f encode_add;
 encode_f encode_addpd;
 encode_f encode_addsd;
+encode_f encode_addps;
+encode_f encode_addss;
 encode_f encode_call;
 encode_f encode_cmp;
 encode_f encode_jcc;

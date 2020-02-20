@@ -1035,6 +1035,32 @@ DEF_ENCODE_FN(addsd)
     }
 }
 
+DEF_ENCODE_FN(addps)
+{
+    switch (opcode) {
+    case Opcode::ADDPSrr:
+        return write_modrm_reg_r(0x0f, 0x58, explOperands, ENC_FLAG_NONE, buf);
+    case Opcode::ADDPSrm:
+        return write_modrm_reg_m(0x0f, 0x58, explOperands, ENC_FLAG_NONE, buf,
+                                 addr);
+    default:
+        drob_assert_not_reached();
+    }
+}
+
+DEF_ENCODE_FN(addss)
+{
+    switch (opcode) {
+    case Opcode::ADDSSrr:
+        return write_modrm_reg_r(0x0f, 0x58, explOperands, ENC_FLAG_F3, buf);
+    case Opcode::ADDSSrm:
+        return write_modrm_reg_m(0x0f, 0x58, explOperands, ENC_FLAG_F3, buf,
+                                 addr);
+    default:
+        drob_assert_not_reached();
+    }
+}
+
 DEF_ENCODE_FN(call)
 {
     switch (opcode) {

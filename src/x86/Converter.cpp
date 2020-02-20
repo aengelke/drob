@@ -469,6 +469,18 @@ static const OpcodeInfo *convert_addsd(const xed_decoded_inst_t &xedd,
     return convert_rm_rr(xedd, opcode, operands, Opcode::ADDSDrm, Opcode::ADDSDrr);
 }
 
+static const OpcodeInfo *convert_addps(const xed_decoded_inst_t &xedd,
+                       Opcode *opcode, ExplicitStaticOperands *operands)
+{
+    return convert_rm_rr(xedd, opcode, operands, Opcode::ADDPSrm, Opcode::ADDPSrr);
+}
+
+static const OpcodeInfo *convert_addss(const xed_decoded_inst_t &xedd,
+                       Opcode *opcode, ExplicitStaticOperands *operands)
+{
+    return convert_rm_rr(xedd, opcode, operands, Opcode::ADDSSrm, Opcode::ADDSSrr);
+}
+
 static const OpcodeInfo *convert_call(const xed_decoded_inst_t &xedd,
                       Opcode *opcode, ExplicitStaticOperands *operands)
 {
@@ -846,6 +858,10 @@ static const OpcodeInfo *convert_simple(const xed_decoded_inst_t &xedd,
     case XED_ICLASS_ADDPD:
         return convert_addpd(xedd, opcode, operands);
     case XED_ICLASS_ADDSD:
+        return convert_addsd(xedd, opcode, operands);
+    case XED_ICLASS_ADDPS:
+        return convert_addpd(xedd, opcode, operands);
+    case XED_ICLASS_ADDSS:
         return convert_addsd(xedd, opcode, operands);
     case XED_ICLASS_CALL_NEAR:
         return convert_call(xedd, opcode, operands);

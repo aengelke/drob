@@ -23,6 +23,8 @@ namespace drob {
 specialize_f specialize_add64;
 specialize_f specialize_addpd;
 specialize_f specialize_addsd;
+specialize_f specialize_addps;
+specialize_f specialize_addss;
 
 specialize_f specialize_cmp8;
 specialize_f specialize_cmp16;

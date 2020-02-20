@@ -230,6 +230,75 @@ DEF_SPECIALIZE_FN(addsd)
     return SpecRet::NoChange;
 }
 
+DEF_SPECIALIZE_FN(addps)
+{
+    __uint128_t imm;
+
+    /*
+     * TODO: adding zero can only sometimes be optimized out (due to fp
+     * arithmetic and signs).
+     */
+    if (dynInfo.operands[0].output.isImm()) {
+        imm = dynInfo.operands[0].output.getImm128();
+        if (!imm) {
+            /* result is 0 -> use PXOR */
+            opcode = Opcode::PXOR128rr;
+            explOperands.op[1].reg = explOperands.op[0].reg;
+            return SpecRet::Change;
+        }
+
+        /* use MOVAPD - constant pool gives us aligned pointers */
+        opcode = Opcode::MOVAPDrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+
+    if (dynInfo.operands[1].input.isImm()) {
+        imm = dynInfo.operands[1].input.getImm128();
+        opcode = Opcode::ADDPSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+
+    return SpecRet::NoChange;
+}
+
+DEF_SPECIALIZE_FN(addss)
+{
+    uint32_t imm;
+
+    /*
+     * TODO: adding zero can only sometimes be optimized out (due to fp
+     * arithmetic and signs).
+     */
+    if (dynInfo.operands[0].output.isImm()) {
+        imm = dynInfo.operands[0].output.getImm64();
+        /* TODO: If !imm and high part of register is not alive, use PXOR */
+
+        /* use MOVSS */
+        opcode = Opcode::MOVSSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+
+    if (dynInfo.operands[1].input.isImm()) {
+        imm = dynInfo.operands[1].input.getImm64();
+        opcode = Opcode::ADDSSrm;
+        explOperands.op[1].mem.type = MemPtrType::Direct;
+        explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+        explOperands.op[1].mem.addr.usrPtrNr = -1;
+        return SpecRet::Change;
+    }
+
+    return SpecRet::NoChange;
+}
+
 DEF_SPECIALIZE_FN(cmp8)
 {
     Immediate64 imm;

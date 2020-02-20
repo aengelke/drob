@@ -58,6 +58,14 @@ DEF_OPC(ADDPDrr, x128RW_x128R, none, none, Other, nullptr, addpd, addpd, addpd, 
 DEF_OPC(ADDSDrm, x64RW_m64R, none, none, Other, nullptr, addsd, addsd, addsd, OfEmuImm)
 DEF_OPC(ADDSDrr, x64RW_x64R, none, none, Other, nullptr, addsd, addsd, addsd, OfEmuImm)
 
+/* ADDPS */
+DEF_OPC(ADDPSrm, x128RW_m128R, none, none, Other, nullptr, addps, addps, addps, OfEmuImm)
+DEF_OPC(ADDPSrr, x128RW_x128R, none, none, Other, nullptr, addps, addps, addps, OfEmuImm)
+
+/* ADDSS */
+DEF_OPC(ADDSSrm, x64RW_m64R, none, none, Other, nullptr, addss, addss, addss, OfEmuImm)
+DEF_OPC(ADDSSrr, x64RW_x64R, none, none, Other, nullptr, addss, addss, addss, OfEmuImm)
+
 /* CALL */
 DEF_OPC(CALLa, mA, push64, none, Call, nullptr, call, call, nullptr, OfEmuFull)
 DEF_OPC(CALLm, m64R, push64, none, Call, nullptr, call, call, nullptr, OfEmuFull)
