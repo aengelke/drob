@@ -490,6 +490,36 @@ DEF_SPECIALIZE_FN(movsd)
     return SpecRet::NoChange;
 }
 
+DEF_SPECIALIZE_FN(movss)
+{
+    uint32_t imm;
+
+    if (unlikely(opcode == Opcode::MOVSSrr &&
+                 explOperands.op[0].reg == explOperands.op[1].reg)) {
+        return SpecRet::Delete;
+    }
+
+    if (dynInfo.operands[0].output.isImm()) {
+        imm = dynInfo.operands[0].output.getImm64();
+        if (opcode == Opcode::MOVSSrm) {
+            opcode = Opcode::MOVSSrm;
+            explOperands.op[1].mem.type = MemPtrType::Direct;
+            explOperands.op[1].mem.addr.val = (uint64_t)binaryPool.allocConstant(imm);
+            explOperands.op[1].mem.addr.usrPtrNr = -1;
+            return SpecRet::Change;
+        } else if (opcode == Opcode::MOVSSmr) {
+            /* We can directly move an immediate to memory */
+            if (is_simm32(imm)) {
+                opcode = Opcode::MOV32mi;
+                explOperands.op[1].imm.val = imm;
+                explOperands.op[1].imm.usrPtrNr = -1;
+                return SpecRet::Change;
+            }
+        }
+    }
+    return SpecRet::NoChange;
+}
+
 DEF_SPECIALIZE_FN(movupd)
 {
     __uint128_t imm;

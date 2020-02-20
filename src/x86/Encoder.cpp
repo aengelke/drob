@@ -1274,6 +1274,22 @@ DEF_ENCODE_FN(movsd)
     }
 }
 
+DEF_ENCODE_FN(movss)
+{
+    switch (opcode) {
+    case Opcode::MOVSSrm:
+        return write_modrm_reg_m(0x0f, 0x10, explOperands, ENC_FLAG_F3, buf,
+                                 addr);
+    case Opcode::MOVSSrr:
+        return write_modrm_reg_r(0x0f, 0x10, explOperands, ENC_FLAG_F3, buf);
+    case Opcode::MOVSSmr:
+        return write_modrm_m_reg(0x0f, 0x11, explOperands, ENC_FLAG_F3, buf,
+                                 addr);
+    default:
+        drob_assert_not_reached();
+    }
+}
+
 DEF_ENCODE_FN(movupd)
 {
     switch (opcode) {

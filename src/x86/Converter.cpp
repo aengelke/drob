@@ -624,6 +624,13 @@ static const OpcodeInfo *convert_movsd(const xed_decoded_inst_t &xedd,
                 Opcode::MOVSDrm, Opcode::MOVSDrr);
 }
 
+static const OpcodeInfo *convert_movss(const xed_decoded_inst_t &xedd,
+                       Opcode *opcode, ExplicitStaticOperands *operands)
+{
+    return convert_mr_rm_rr(xedd, opcode, operands, Opcode::MOVSSmr,
+                Opcode::MOVSSrm, Opcode::MOVSSrr);
+}
+
 static const OpcodeInfo *convert_movupd(const xed_decoded_inst_t &xedd,
                     Opcode *opcode, ExplicitStaticOperands *operands)
 {
@@ -860,6 +867,8 @@ static const OpcodeInfo *convert_simple(const xed_decoded_inst_t &xedd,
         return convert_movaps(xedd, opcode, operands);
     case XED_ICLASS_MOVSD_XMM:
         return convert_movsd(xedd, opcode, operands);
+    case XED_ICLASS_MOVSS:
+        return convert_movss(xedd, opcode, operands);
     case XED_ICLASS_MOVUPD:
         return convert_movupd(xedd, opcode, operands);
     case XED_ICLASS_MOVUPS:

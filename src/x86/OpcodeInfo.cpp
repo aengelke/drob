@@ -195,6 +195,13 @@ static const Predicate pred_none = {
 #define r64MR       DEF_REG_MAYREAD(Gprs64, Full)
 #define r64MRW      DEF_REG_MAYREADWRITE(Gprs64, Full)
 
+/* 32-bit sse register operand definitions */
+#define x32W        DEF_REG_WRITE(Sse128, F0)
+#define x32R        DEF_REG_READ(Sse128, F0)
+#define x32RW       DEF_REG_READWRITE(Sse128, F0)
+#define x32MR       DEF_REG_MAYREAD(Sse128, F0)
+#define x32MRW      1DEF_REG_MAYREADWRITE(Sse128, F0)
+
 /* 64-bit sse register operand definitions */
 #define x64W        DEF_REG_WRITE(Sse128, H0)
 #define x64R        DEF_REG_READ(Sse128, H0)
@@ -314,6 +321,11 @@ DEF_EOI_2(m64W, x64R);
 DEF_EOI_2(m64RW, r64R);
 DEF_EOI_2(m64RW, i8);
 DEF_EOI_2(m64RW, s32);
+
+DEF_EOI_2(x32W, m32R);
+DEF_EOI_2(x32W, x32R);
+DEF_EOI_2(x32RW, m32R);
+DEF_EOI_2(x32RW, x32R);
 
 DEF_EOI_2(x64W, m64R);
 DEF_EOI_2(x64W, x64R);
