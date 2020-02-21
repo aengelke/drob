@@ -1155,6 +1155,28 @@ DEF_ENCODE_FN(cmp)
     }
 }
 
+DEF_ENCODE_FN(imul)
+{
+    switch (opcode) {
+    case Opcode::IMUL16rr:
+        return write_modrm_r_reg(0x0f, 0xaf, explOperands, ENC_FLAG_66, buf);
+    case Opcode::IMUL32rr:
+        return write_modrm_r_reg(0x0f, 0xaf, explOperands, ENC_FLAG_NONE, buf);
+    case Opcode::IMUL64rr:
+        return write_modrm_r_reg(0x0f, 0xaf, explOperands, ENC_FLAG_REXW, buf);
+
+    case Opcode::IMUL16rm:
+        return write_modrm_reg_m(0x0f, 0xaf, explOperands, ENC_FLAG_66, buf, addr);
+    case Opcode::IMUL32rm:
+        return write_modrm_reg_m(0x0f, 0xaf, explOperands, ENC_FLAG_NONE, buf, addr);
+    case Opcode::IMUL64rm:
+        return write_modrm_reg_m(0x0f, 0xaf, explOperands, ENC_FLAG_REXW, buf, addr);
+
+    default:
+        drob_assert_not_reached();
+    }
+}
+
 DEF_ENCODE_FN(jcc)
 {
     (void)opcode;

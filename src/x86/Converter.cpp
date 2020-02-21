@@ -519,6 +519,30 @@ static const OpcodeInfo *convert_cmp(const xed_decoded_inst_t &xedd,
     }
 }
 
+static const OpcodeInfo *convert_imul(const xed_decoded_inst_t &xedd,
+                                      Opcode *opcode, ExplicitStaticOperands *operands)
+{
+    if (has_imm(xedd)) {
+        return nullptr; // IMUL with 3 operands
+    } else if (is_memop(xedd, 0)) {
+        return nullptr; // IMUL with 1 operand
+    } else {
+        switch (xed_decoded_inst_get_operand_width(&xedd)) {
+        case 16:
+            return convert_rm_rr(xedd, opcode, operands, Opcode::IMUL16rm,
+                                 Opcode::IMUL16rr);
+        case 32:
+            return convert_rm_rr(xedd, opcode, operands, Opcode::IMUL32rm,
+                                 Opcode::IMUL32rr);
+        case 64:
+            return convert_rm_rr(xedd, opcode, operands, Opcode::IMUL64rm,
+                                 Opcode::IMUL64rr);
+        default:
+            drob_assert_not_reached();
+        }
+    }
+}
+
 static const OpcodeInfo *convert_jcc(const xed_decoded_inst_t &xedd,
                                      Opcode *opcode, ExplicitStaticOperands *operands)
 {
@@ -867,6 +891,8 @@ static const OpcodeInfo *convert_simple(const xed_decoded_inst_t &xedd,
         return convert_call(xedd, opcode, operands);
     case XED_ICLASS_CMP:
         return convert_cmp(xedd, opcode, operands);
+    case XED_ICLASS_IMUL:
+        return convert_imul(xedd, opcode, operands);
     case XED_ICLASS_JNBE:
     case XED_ICLASS_JNB:
     case XED_ICLASS_JB:
