@@ -761,6 +761,10 @@ DEF_EMULATE_FN(xor32)
 
     inout.output = xor32(inout.input.getImm64(), in.input.getImm64(), eflags);
     setEflags(dynInfo, 2, eflags);
+    /* the following flags don't depend on any input values */
+    setCF(dynInfo, 2, DynamicValue((uint8_t)0));
+    setAF(dynInfo, 4, DynamicValue(DynamicValueType::Unknown));
+    setOF(dynInfo, 7, DynamicValue((uint8_t)0));
     return EmuRet::Ok;
 }
 
@@ -782,6 +786,10 @@ DEF_EMULATE_FN(xor64)
 
     inout.output = xor64(inout.input.getImm64(), in.input.getImm64(), eflags);
     setEflags(dynInfo, 2, eflags);
+    /* the following flags don't depend on any input values */
+    setCF(dynInfo, 2, DynamicValue((uint8_t)0));
+    setAF(dynInfo, 4, DynamicValue(DynamicValueType::Unknown));
+    setOF(dynInfo, 7, DynamicValue((uint8_t)0));
     return EmuRet::Ok;
 }
 
