@@ -34,6 +34,7 @@ emulate_f emulate_cmp32;
 emulate_f emulate_cmp64;
 emulate_f emulate_call;
 emulate_f emulate_lea;
+emulate_f emulate_imul2_64;
 emulate_f emulate_mov;
 emulate_f emulate_mulpd;
 emulate_f emulate_mulsd;

@@ -47,6 +47,20 @@ static void setEflags(DynamicInstructionInfo& dynInfo, int startIdx,
     dynInfo.operands[startIdx++].output = DynamicValue(eflags.of);
 }
 
+static void setCF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &data)
+{
+    drob_assert(dynInfo.operands[idx].type == OperandType::Register);
+    drob_assert(dynInfo.operands[idx].regAcc.reg == Register::CF);
+    dynInfo.operands[idx].output = data;
+}
+
+static void setPF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &data)
+{
+    drob_assert(dynInfo.operands[idx].type == OperandType::Register);
+    drob_assert(dynInfo.operands[idx].regAcc.reg == Register::PF);
+    dynInfo.operands[idx].output = data;
+}
+
 static void setAF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &data)
 {
     drob_assert(dynInfo.operands[idx].type == OperandType::Register);
@@ -54,10 +68,17 @@ static void setAF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &
     dynInfo.operands[idx].output = data;
 }
 
-static void setCF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &data)
+static void setZF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &data)
 {
     drob_assert(dynInfo.operands[idx].type == OperandType::Register);
-    drob_assert(dynInfo.operands[idx].regAcc.reg == Register::CF);
+    drob_assert(dynInfo.operands[idx].regAcc.reg == Register::ZF);
+    dynInfo.operands[idx].output = data;
+}
+
+static void setSF(DynamicInstructionInfo& dynInfo, int idx, const DynamicValue &data)
+{
+    drob_assert(dynInfo.operands[idx].type == OperandType::Register);
+    drob_assert(dynInfo.operands[idx].regAcc.reg == Register::SF);
     dynInfo.operands[idx].output = data;
 }
 
@@ -340,6 +361,31 @@ DEF_EMULATE_FN(cmp64)
      * TODO: we could make use of UsrPtr information here, e.g. comparing a
      * pointer against immediates/zero
      */
+    return EmuRet::Ok;
+}
+
+static inline uint64_t imul2_64(uint64_t a, uint64_t b, Eflags &eflags)
+{
+    asm volatile ("     imulq %[in], %[inout]\n"
+                  : [inout] "+g" (a)
+                  : [in] "r" (b)
+                  : "memory" );
+    readEflags(eflags);
+    return a;
+}
+
+DEF_EMULATE_FN(imul2_64)
+{
+    DynamicOperandInfo &inout = dynInfo.operands[0];
+    DynamicOperandInfo &in = dynInfo.operands[1];
+    Eflags eflags;
+
+    inout.output = imul2_64(inout.input.getImm64(), in.input.getImm64(), eflags);
+    setEflags(dynInfo, 2, eflags);
+    setPF(dynInfo, 3, DynamicValue(DynamicValueType::Unknown));
+    setAF(dynInfo, 4, DynamicValue(DynamicValueType::Unknown));
+    setZF(dynInfo, 5, DynamicValue(DynamicValueType::Unknown));
+    setSF(dynInfo, 6, DynamicValue(DynamicValueType::Unknown));
     return EmuRet::Ok;
 }
 
