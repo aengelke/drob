@@ -1065,9 +1065,9 @@ DEF_ENCODE_FN(call)
 {
     switch (opcode) {
     case Opcode::CALLr:
-        return write_modrm_r(0xff, 0x03, explOperands, ENC_FLAG_NONE, buf);
+        return write_modrm_r(0xff, 0x02, explOperands, ENC_FLAG_NONE, buf);
     case Opcode::CALLm:
-        return write_modrm_m(0xff, 0x03, explOperands, ENC_FLAG_NONE, buf, addr);
+        return write_modrm_m(0xff, 0x02, explOperands, ENC_FLAG_NONE, buf, addr);
     default:
         /* We can always predict the real target for CALL */
         drob_assert_not_reached();
@@ -1175,6 +1175,31 @@ DEF_ENCODE_FN(imul)
     default:
         drob_assert_not_reached();
     }
+}
+
+DEF_ENCODE_FN(inc)
+{
+    switch (opcode) {
+    case Opcode::INC8r:
+        return write_modrm_r(0xfe, 0x00, explOperands, ENC_FLAG_NONE, buf);
+    case Opcode::INC16r:
+        return write_modrm_r(0xff, 0x00, explOperands, ENC_FLAG_66, buf);
+    case Opcode::INC32r:
+        return write_modrm_r(0xff, 0x00, explOperands, ENC_FLAG_NONE, buf);
+    case Opcode::INC64r:
+        return write_modrm_r(0xff, 0x00, explOperands, ENC_FLAG_REXW, buf);
+    case Opcode::INC8m:
+        return write_modrm_m(0xfe, 0x00, explOperands, ENC_FLAG_NONE, buf, addr);
+    case Opcode::INC16m:
+        return write_modrm_m(0xff, 0x00, explOperands, ENC_FLAG_66, buf, addr);
+    case Opcode::INC32m:
+        return write_modrm_m(0xff, 0x00, explOperands, ENC_FLAG_NONE, buf, addr);
+    case Opcode::INC64m:
+        return write_modrm_m(0xff, 0x00, explOperands, ENC_FLAG_REXW, buf, addr);
+    default:
+        /* We can always predict the real target for CALL */
+        drob_assert_not_reached();
+    };
 }
 
 DEF_ENCODE_FN(jcc)

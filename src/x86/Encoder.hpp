@@ -28,6 +28,7 @@ encode_f encode_addss;
 encode_f encode_call;
 encode_f encode_cmp;
 encode_f encode_imul;
+encode_f encode_inc;
 encode_f encode_jcc;
 encode_f encode_jmp;
 encode_f encode_lea;

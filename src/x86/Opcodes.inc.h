@@ -102,6 +102,16 @@ DEF_OPC(IMUL32rm, r32RW_m32R, eflagsW, none, Other, nullptr, imul, nullptr, null
 DEF_OPC(IMUL64rr, r64RW_r64R, eflagsW, none, Other, nullptr, imul, imul2_64, nullptr, OfEmuImm)
 DEF_OPC(IMUL64rm, r64RW_m64R, eflagsW, none, Other, nullptr, imul, imul2_64, nullptr, OfEmuImm)
 
+/* INC */
+DEF_OPC(INC8r, r8RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC8m, m8RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC16r, r16RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC16m, m16RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC32r, r32RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC32m, m32RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC64r, r64RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+DEF_OPC(INC64m, m64RW, incdec, none, Other, nullptr, inc, nullptr, nullptr, OfNone)
+
 /* Jcc (rel8/32 converted to absolute address) */
 DEF_OPC(JNBEa, mA, none, NBE, Branch, nullptr, jcc, nullptr, nullptr, OfNone)
 DEF_OPC(JNBa, mA, none, NB, Branch, nullptr, jcc, nullptr, nullptr, OfNone)

@@ -235,11 +235,29 @@ static const Predicate pred_none = {
     }
 
 /* Definitions for instructions with 1 explicit memory operand */
+DEF_EOI_1(r8R);
+DEF_EOI_1(r8W);
+DEF_EOI_1(r8RW);
+
+DEF_EOI_1(m8R);
+DEF_EOI_1(m8W);
+DEF_EOI_1(m8RW);
+
 DEF_EOI_1(r16R);
 DEF_EOI_1(r16W);
+DEF_EOI_1(r16RW);
 
 DEF_EOI_1(m16R);
 DEF_EOI_1(m16W);
+DEF_EOI_1(m16RW);
+
+DEF_EOI_1(r32R);
+DEF_EOI_1(r32W);
+DEF_EOI_1(r32RW);
+
+DEF_EOI_1(m32R);
+DEF_EOI_1(m32W);
+DEF_EOI_1(m32RW);
 
 DEF_EOI_1(r64R);
 DEF_EOI_1(r64W);
@@ -351,6 +369,46 @@ static const StaticOperandInfo ioi_eflagsW[6] = {
                .r = RegisterAccessType::None,
                .w = RegisterAccessType::Full },
     },
+    {
+        .type = OperandType::Register,
+        .r = { .reg = Register::PF,
+               .mode = AccessMode::Write,
+               .r = RegisterAccessType::None,
+               .w = RegisterAccessType::Full },
+    },
+    {
+        .type = OperandType::Register,
+        .r = { .reg = Register::AF,
+               .mode = AccessMode::Write,
+               .r = RegisterAccessType::None,
+               .w = RegisterAccessType::Full },
+    },
+    {
+        .type = OperandType::Register,
+        .r = { .reg = Register::ZF,
+               .mode = AccessMode::Write,
+               .r = RegisterAccessType::None,
+               .w = RegisterAccessType::Full },
+    },
+    {
+        .type = OperandType::Register,
+        .r = { .reg = Register::SF,
+               .mode = AccessMode::Write,
+               .r = RegisterAccessType::None,
+               .w = RegisterAccessType::Full },
+     },    {
+        .type = OperandType::Register,
+        .r = { .reg = Register::OF,
+               .mode = AccessMode::Write,
+               .r = RegisterAccessType::None,
+               .w = RegisterAccessType::Full },
+     },
+};
+
+/*
+ * Write all eflags except CF.
+ */
+static const StaticOperandInfo ioi_incdec[6] = {
     {
         .type = OperandType::Register,
         .r = { .reg = Register::PF,
